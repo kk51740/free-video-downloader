@@ -28,14 +28,23 @@ class LoginRequest(BaseModel):
 
 def _build_user_response(user: dict) -> dict:
     is_vip = False
-    vip_expire_at = None
-    if user.get("is_vip") and user.get("vip_expire_at"):
-        try:
-            expire = datetime.fromisoformat(user["vip_expire_at"])
-            is_vip = expire > datetime.now(timezone.utc)
-            vip_expire_at = user["vip_expire_at"]
-        except ValueError:
-            pass
+    vip_expire_at = user.get("vip_expire_at")
+    
+    # 如果 is_vip=1 且 vip_expire_at 为 NULL，表示永久VIP
+    if user.get("is_vip"):
+        if vip_expire_at is None:
+            is_vip = True  # 永久VIP
+        else:
+            try:
+                expire = datetime.fromisoformat(vip_expire_at)
+                # 确保比较时使用相同类型
+                now = datetime.now(timezone.utc).replace(tzinfo=None)
+                if expire.tzinfo is None:
+                    is_vip = expire > now
+                else:
+                    is_vip = expire > datetime.now(timezone.utc)
+            except ValueError:
+                is_vip = True  # 解析失败时默认VIP
 
     return {
         "id": user["id"],
