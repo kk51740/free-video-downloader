@@ -136,9 +136,11 @@ const props = defineProps({
 })
 defineEmits(['download', 'summarize'])
 
+const API_BASE = 'http://192.168.68.100:8000'
+
 const thumbnailUrl = computed(() => {
   if (!props.video.thumbnail) return ''
-  return '/api/proxy/thumbnail?url=' + encodeURIComponent(props.video.thumbnail)
+  return API_BASE + '/api/proxy/thumbnail?url=' + encodeURIComponent(props.video.thumbnail)
 })
 
 const selectedFormat = ref(

@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+const API_BASE = 'http://192.168.68.100:8000'
 const TOKEN_KEY = 'saveany_token'
 const USER_KEY = 'saveany_user'
 
@@ -35,7 +36,7 @@ function authHeaders() {
 }
 
 export async function register(email, password) {
-  const res = await axios.post('/api/auth/register', { email, password })
+  const res = await axios.post(`${API_BASE}/api/auth/register`, { email, password })
   const { token, user } = res.data.data
   setToken(token)
   saveUser(user)
@@ -43,7 +44,7 @@ export async function register(email, password) {
 }
 
 export async function login(email, password) {
-  const res = await axios.post('/api/auth/login', { email, password })
+  const res = await axios.post(`${API_BASE}/api/auth/login`, { email, password })
   const { token, user } = res.data.data
   setToken(token)
   saveUser(user)
@@ -51,7 +52,7 @@ export async function login(email, password) {
 }
 
 export async function fetchMe() {
-  const res = await axios.get('/api/auth/me', { headers: authHeaders() })
+  const res = await axios.get(`${API_BASE}/api/auth/me`, { headers: authHeaders() })
   const user = res.data.data
   saveUser(user)
   return user

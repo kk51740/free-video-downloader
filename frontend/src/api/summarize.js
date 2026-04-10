@@ -5,6 +5,8 @@
 
 import { getToken } from './auth'
 
+const API_BASE = 'http://192.168.68.100:8000'
+
 async function handleSSEStream(response, callbacks) {
   const reader = response.body.getReader()
   const decoder = new TextDecoder()
@@ -65,7 +67,7 @@ function authHeaders() {
 }
 
 export async function summarizeVideo(url, language = 'zh', callbacks = {}) {
-  const response = await fetch('/api/summarize', {
+  const response = await fetch(`${API_BASE}/api/summarize`, {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify({ url, language }),
@@ -79,7 +81,7 @@ export async function summarizeVideo(url, language = 'zh', callbacks = {}) {
 }
 
 export async function chatWithVideo(url, question, subtitleText = '', callbacks = {}) {
-  const response = await fetch('/api/chat', {
+  const response = await fetch(`${API_BASE}/api/chat`, {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify({ url, question, subtitle_text: subtitleText }),
